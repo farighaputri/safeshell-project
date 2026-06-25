@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Safe Shell - Donasi</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #1c3b2c;
+            color: white;
+            padding-top: 90px; /* Ruang untuk header tetap */
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background-color: #1c3b2c;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+        }
+
+        header nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #d4d4d4;
+        }
+
+        header .btn {
+            background-color: #cde596;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        /* Main Content (Initial Donation Section) */
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 60px 40px;
+            gap: 30px;
+        }
+
+        .content {
+            max-width: 500px;
+        }
+
+        .content h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: left; /* Sesuaikan agar tidak terpusat di sini */
+        }
+
+        .content p {
+            font-size: 18px;
+            color: #d3e6db;
+            margin-bottom: 30px;
+            font-style: italic;
+            text-align: left; /* Sesuaikan agar tidak terpusat di sini */
+        }
+
+        .donate-btn {
+            background-color: #cde2c4;
+            color: #1e3a34;
+            padding: 12px 24px;
+            border: none;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .image-section img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+        }
+
+        /* Donation Form (Amount Selection) */
+        .form-wrapper {
+            display: none; /* Hidden by default */
+            background-color: #e8f3e3;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 600px;
+            border-radius: 20px;
+            color: #1e3a34;
+        }
+
+        .form-wrapper h2 {
+            text-align: center;
+        }
+
+        .form-wrapper p {
+            text-align: center;
+            font-style: italic;
+        }
+
+        .amount-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .amount-options button {
+            padding: 14px;
+            font-size: 16px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .amount-options button span {
+            float: right;
+        }
+
+        #customAmount {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        #continueBtn {
+            width: 100%;
+            background-color: #888;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: not-allowed;
+        }
+
+        /* Payment Container (Metode Pembayaran & Data Donatur) */
+        /* Ini adalah container utama untuk halaman detail pembayaran sebelum modal diaktifkan */
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: none; /* Hidden by default karena sekarang modal yang akan tampil */
+            color: #1e3a34;
+        }
+
+        .container h2 {
+            text-align: center;
+        }
+
+        .input-group, .bank-select {
+            margin-top: 20px;
+        }
+
+        .bank-button {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .bank-button span {
+            color: #1e3a34;
+        }
+
+        /* Payment Details Section (Tampilan Metode Pembayaran yang dipilih) */
+        .payment-details {
+            background-color: #e8f3e3;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            color: #1e3a34;
+            display: none; /* Hidden by default */
+            line-height: 1.4;
+        }
+
+        .payment-details h3 {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #1e3a34;
+        }
+
+        .payment-details p {
+            font-size: 0.95em;
+            margin-bottom: 5px;
+            font-weight: normal;
+        }
+
+        .payment-details p strong {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #1f3828;
+        }
+
+        .payment-details img {
+            max-width: 180px;
+            height: auto;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        /* Modal for Payment Method Selection */
+        .payment-modal {
+            display: none; /* Hidden by default, activated by JS */
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            color: #1e3a34;
+            position: relative; /* Untuk posisi tombol close */
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .bank-list button {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 6px 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bank-list button img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .bank-list button.selected-bank {
+            background-color: #d7e7d8;
+            border: 2px solid #5b8d4d;
+            font-weight: bold;
+        }
+
+        .btn-submit {
+            background-color: #1f3828;
+            color: white;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Konfirmasi Donasi (Bagian Baru) */
+        .konfirmasi-box {
+            background-color: #e8f3e3; /* Warna hijau muda */
+            color: #1e3a34; /* Warna teks gelap */
+            border-radius: 20px; /* Sudut membulat */
+            padding: 40px;
+            max-width: 550px; /* Lebar maksimal box */
+            width: 100%; /* Agar responsif */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Bayangan lembut */
+            text-align: left; /* Teks rata kiri */
+            display: none; /* Tersembunyi secara default */
+            margin: 40px auto; /* Pusatkan */
+        }
+
+        .konfirmasi-box h2 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .konfirmasi-box p.deskripsi-konfirmasi {
+            font-size: 1em;
+            color: #5b8d4d; /* Warna hijau untuk deskripsi */
+            margin-bottom: 30px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .konfirmasi-box .detail-item {
+            background-color: #d7e7d8;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .konfirmasi-box .detail-item strong {
+            font-weight: bold;
+            color: #1f3828;
+        }
+
+        .konfirmasi-box .metode-pembayaran-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .konfirmasi-box .metode-pembayaran-info img {
+            height: 25px;
+            width: auto;
+            margin-left: 10px;
+        }
+
+        .konfirmasi-box .nomor-va-group-konfirmasi {
+            display: flex;
+            align-items: center;
+            border: 1px solid #c0c0c0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+
+        .konfirmasi-box .nomor-va-group-konfirmasi .nomor-va-display {
+            flex-grow: 1;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1e3a34;
+        }
+
+        .konfirmasi-box .nomor-va-group-konfirmasi button {
+            background-color: #5b8d4d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        .konfirmasi-box .nomor-va-group-konfirmasi button:hover {
+            background-color: #4a916d;
+        }
+
+        .konfirmasi-box .total-donasi-konfirmasi {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .konfirmasi-box .tombol-kembali-utama {
+            width: 100%;
+            padding: 15px;
+            background-color: #1e3a34;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .konfirmasi-box .tombol-kembali-utama:hover {
+            background-color: #2a523b;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #1c3b2c;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 16px;
+            color: white;
+        }
+
+        .footer-text {
+            max-width: 400px;
+        }
+
+        .supported-by {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .supported-by img {
+            margin-top: 10px;
+            height: 50px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            header nav {
+                margin-top: 10px;
+            }
+
+            main {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .konfirmasi-box {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="assets/safeshell bg putih bulet.png" alt="Logo Safe Shell" />
+            <div><strong>Safe Shell</strong><br />Pulau Derawan</div>
+        </div>
+        <nav>
+            <a href="home.html" class="active">Beranda</a>
+            <a href="volunteer.php" class="active">Volunteer</a>
+            <a href="donasi.html" class="active">Donasi</a>
+            <a href="staff.html" class="active">Staff</a>
+    </nav>
+    </header>
+
+    <main id="introSection">
+        <section class="content">
+            <h1>Satu Langkah Berbagi, <br>Buat Lebih Berarti.</h1>
+            <p>Dukung kami membuat rumah nyaman untuk penyu</p>
+            <button class="donate-btn" onclick="donateNow()">DONASI SEKARANG</button>
+        </section>
+
+        <section class="image-section">
+            <img src="assets/donasi.jpg.jpg" alt="Tukik" />
+        </section>
+    </main>
+
+    <div class="form-wrapper" id="donationForm">
+        <h2>Donasi Untuk Safe Shell</h2>
+        <p>Dukung kami membuat rumah nyaman untuk penyu</p>
+        <hr style="margin: 20px 0;" />
+
+        <div class="amount-options">
+            <button onclick="selectAmount(10000)"> 🐢 Rp. 10.000 <span>&gt;</span></button>
+            <button onclick="selectAmount(50000)"> 🐢 Rp. 50.000 <span>&gt;</span></button>
+            <button onclick="selectAmount(75000)"> 🐢 Rp. 75.000 <span>&gt;</span></button>
+            <button onclick="selectAmount(100000)">🐢 Rp. 100.000 <span>&gt;</span></button>
+        </div>
+
+        <label for="customAmount">Masukkan Donasi Lainnya</label>
+        <input type="number" id="customAmount" placeholder="Rp" oninput="checkAmount()" />
+        <small>Min. donasi sebesar Rp10.000</small>
+
+        <hr style="margin: 20px 0;" />
+        <button id="continueBtn" disabled onclick="goToPaymentPage()">Lanjut Pembayaran</button>
+    </div>
+
+    <div class="container" id="paymentContainer">
+        <h2>Donasi Untuk Safe Shell</h2>
+        <p style="text-align:center; margin-bottom: 30px;">Dukung kami membuat rumah nyaman untuk penyu</p>
+
+        <label>Masukkan Jumlah Donasi</label>
+        <input type="text" id="displayAmount" value="Rp 0" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc; margin-top:8px;" readonly />
+
+        <div class="bank-select">
+            <label>Metode Pembayaran</label>
+            <button class="bank-button" onclick="openModal()">
+                <span id="selectedBank">Pilih Metode Pembayaran</span>
+                <span>&#x25B6;</span>
+            </button>
+        </div>
+
+        <div class="payment-details" id="paymentDetails">
+            </div>
+
+        <div class="input-group">
+            <p><strong> Lengkapi data dibawah ini dengan benar!</p></strong><br>
+            <input type="text" id="namaDonatur" placeholder="Nama Lengkap" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc; margin-bottom:10px;" />
+            <input type="text" id="kontakDonatur" placeholder="Nomor Ponsel atau Email" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;" />
+            <p style="font-size:12px; color:#666; margin-top:6px;">Pastikan kembali e-mail atau nomor ponselmu sudah benar untuk menerima laporan donasi.</p>
+            <label style="font-size:14px; margin-top:10px; display:block;"><br>
+                <input type="checkbox" id="anonimCheckbox" checked /> Sembunyikan nama saya (donasi sebagai anonim)
+            </label>
+        </div>
+
+        <div class="input-group">
+            <label>Sertakan dukunganmu untuk Safe Shell</label>
+            <textarea id="pesanDukungan" placeholder="Tulis dukungan darimu!" style="width:100%; height:100px; padding:12px; border-radius:10px; border:1px solid #ccc;"></textarea>
+        </div>
+
+        <div style="margin-top: 20px; display:flex; justify-content:space-between; align-items:center;">
+            <strong>Total Donasi</strong>
+            <strong id="totalDonationDisplay">Rp 0</strong>
+        </div>
+        <button class="btn-submit" onclick="goToKonfirmasiPembayaran()">Lanjut Pembayaran</button>
+    </div>
+
+    <div class="payment-modal" id="paymentModal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h3 style="text-align:center;">Pilih Metode Pembayaran</h3>
+            <hr />
+            <div class="bank-list" id="bankList">
+                <button onclick="selectBank('BCA Virtual Account', this, 'BCA_VA', '870123456789', '1280px-Bank_Central_Asia.svg.png')">
+                    <img src="assets/1280px-Bank_Central_Asia.svg.png" alt="BCA Logo"> BCA Virtual Account
+                </button>
+                <button onclick="selectBank('QRIS', this, 'QRIS', 'qris.jpg', 'download (2).png')">
+                    <img src="assets/download (2).png" alt="QRIS Logo"> QRIS
+                </button>
+                <button onclick="selectBank('Gopay', this, 'Gopay', '081234567890', 'download (4).png')">
+                    <img src="assets/download (4).png" alt="Gopay Logo"> Gopay
+                </button>
+                <button onclick="selectBank('Dana', this, 'Dana', '085678901234', 'download (3).png')">
+                    <img src="assets/download (3).png" alt="Dana Logo"> Dana
+                </button>
+                <button onclick="selectBank('BNI Virtual Account', this, 'BNI_VA', '988123456789', 'download (5).png')">
+                    <img src="assets/download (5).png" alt="BNI Logo"> BNI Virtual Account
+                </button>
+                <button onclick="selectBank('Mandiri Virtual Account', this, 'Mandiri_VA', '899123456789', 'download (6).png')">
+                    <img src="assets/download (6).png" alt="Mandiri Logo"> Mandiri Virtual Account
+                </button>
+            </div>
+            <button class="btn-submit" onclick="closeModal()">Pilih Metode Ini</button>
+        </div>
+    </div>
+
+    <div class="konfirmasi-box" id="konfirmasiDonasiSection">
+        <h2>Donasi Untuk Safe Shell</h2>
+        <p class="deskripsi-konfirmasi">Dukung kami membuat rumah nyaman untuk penyu</p>
+
+        <div class="detail-item">
+            Batas waktu pembayaran <br />
+            <strong id="batasWaktuPembayaran"></strong>
+        </div>
+
+        <div class="metode-pembayaran-info">
+            <span id="namaMetodePembayaranKonfirmasi"></span>
+            <img id="logoMetodePembayaranKonfirmasi" src="" alt="Logo Bank" style="display:none;" />
+        </div>
+
+        <div class="nomor-va-group-konfirmasi">
+            <span class="nomor-va-display" id="nomorVirtualAccountKonfirmasi"></span>
+            <button onclick="salinNomorVA()">Salin</button>
+        </div>
+
+        <div class="total-donasi-konfirmasi">
+            <span>Total Donasi</span>
+            <span id="jumlahTotalDonasiKonfirmasi"></span>
+        </div>
+
+        <a href="donasi.html">Kembali ke Halaman Donasi</a>
+    </div>
+
+    <footer>
+    <div class="footer-text">
+      <p>Safe Shell<br><b>Ruang Aman Untuk Penyu</b></p>
+      <p><strong>___________</strong></p><br>
+      <p>Kontak Kami <br>📧 <a href="mailto:safeshell@gmail.com">safeshell@gmail.com</a></p>
+    </div>
+    <div class="supported-by">
+      <p>Didukung oleh:</p>
+      <img src="assets/kopikala logo putih.png" alt="Logo Kopikala" />
+    </div>
+    </footer>
+    <script>
+        let selectedDonationAmount = 0;
+        let selectedPaymentMethod = null; // To store selected method and its details (name, type, details, logo)
+
+        // --- Fungsi-fungsi dari Halaman Donasi Awal ---
+        function donateNow() {
+            document.getElementById("introSection").style.display = "none";
+            document.getElementById("donationForm").style.display = "block";
+            // Sembunyikan bagian lain jika donateNow dipanggil kembali
+            document.getElementById("paymentContainer").style.display = "none"; // Hide main payment container
+            document.getElementById("paymentModal").style.display = "none"; // Hide modal
+            document.getElementById("konfirmasiDonasiSection").style.display = "none"; // Pastikan tersembunyi
+
+            // Mengisi jumlah donasi yang sudah dipilih (jika ada)
+            document.getElementById('customAmount').value = selectedDonationAmount > 0 ? selectedDonationAmount : '';
+            checkAmount(); // Memperbarui status tombol
+        }
+
+        function selectAmount(amount) {
+            document.getElementById('customAmount').value = amount;
+            checkAmount();
+        }
+
+        function checkAmount() {
+            const value = parseInt(document.getElementById('customAmount').value);
+            const btn = document.getElementById('continueBtn');
+            if (value >= 10000) {
+                selectedDonationAmount = value;
+                btn.disabled = false;
+                btn.style.backgroundColor = '#1e3a34';
+                btn.style.cursor = 'pointer';
+            } else {
+                selectedDonationAmount = 0;
+                btn.disabled = true;
+                btn.style.backgroundColor = '#888';
+                btn.style.cursor = 'not-allowed';
+            }
+        }
+
+        function goToPaymentPage() {
+            if (selectedDonationAmount >= 10000) {
+                document.getElementById("donationForm").style.display = "none";
+                document.getElementById("paymentContainer").style.display = "block"; // Menampilkan paymentContainer
+
+                document.getElementById("displayAmount").value = `Rp ${selectedDonationAmount.toLocaleString('id-ID')}`;
+                document.getElementById("totalDonationDisplay").innerText = `Rp ${selectedDonationAmount.toLocaleString('id-ID')}`;
+                
+                document.getElementById("paymentDetails").style.display = "none"; // Sembunyikan detail pembayaran
+                document.getElementById("selectedBank").textContent = 'Pilih Metode Pembayaran'; // Reset teks pilihan bank
+                selectedPaymentMethod = null; // Reset selected payment method
+
+            } else {
+                alert("Minimum donasi adalah Rp10.000.");
+            }
+        }
+
+        function openModal() {
+            document.getElementById("paymentModal").style.display = "flex";
+            // If a bank is already selected, highlight it
+            document.querySelectorAll(".bank-list button").forEach(btn => {
+                btn.classList.remove("selected-bank");
+                // Cek teks yang ditampilkan di tombol dibandingkan dengan nama metode yang dipilih
+                if(selectedPaymentMethod && btn.textContent.includes(selectedPaymentMethod.name)) {
+                    btn.classList.add("selected-bank");
+                }
+            });
+        }
+
+        function closeModal() {
+            document.getElementById("paymentModal").style.display = "none";
+            const paymentDetailsDiv = document.getElementById("paymentDetails");
+            paymentDetailsDiv.innerHTML = ''; 
+
+            if (selectedPaymentMethod) {
+                document.getElementById("selectedBank").textContent = selectedPaymentMethod.name; // Update tampilan di bank-button
+
+                if (selectedPaymentMethod.type === 'QRIS') {
+                    paymentDetailsDiv.innerHTML = `
+                        <h3>Scan QRIS untuk Donasi</h3>
+                        <img src="assets/${selectedPaymentMethod.details}" alt="QRIS Code">
+                        <p>Pastikan Anda telah memasukkan jumlah donasi yang benar di aplikasi pembayaran Anda.</p>
+                    `;
+                } else {
+                    paymentDetailsDiv.innerHTML = `
+                        <h3>Pembayaran melalui ${selectedPaymentMethod.name}</h3>
+                        <p>Nomor Virtual Account:</p>
+                        <p style="font-size: 1.3em; font-weight: bold; color: #1f3828; margin-bottom: 8px;"><strong>${selectedPaymentMethod.details}</strong></p>
+                        <p>Atas nama: Safe Shell</p>
+                        <p>Jumlah yang harus dibayar: <strong>Rp ${selectedDonationAmount.toLocaleString('id-ID')}</strong></p>
+                        <p>Harap selesaikan pembayaran dalam waktu 24 jam.</p>
+                    `;
+                }
+                paymentDetailsDiv.style.display = "block";
+            } else {
+                paymentDetailsDiv.style.display = "none";
+            }
+        }
+
+        // Fungsi selectBank diperbarui untuk menyimpan path logo
+        function selectBank(bankName, btnElement, type, details, logoPath) {
+            // Kita tidak langsung menutup modal di sini, hanya menandai pilihan
+            selectedPaymentMethod = {
+                name: bankName,
+                type: type,
+                details: details,
+                logo: logoPath // Simpan path logo
+            };
+            document.querySelectorAll(".bank-list button").forEach(btn => {
+                btn.classList.remove("selected-bank");
+            });
+            btnElement.classList.add("selected-bank");
+        }
+
+        // --- Fungsi-fungsi untuk Halaman Konfirmasi Donasi dan Backend Integration ---
+
+        // Fungsi untuk format tanggal dan waktu
+        function formatDateTime(date) {
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                timeZoneName: 'shortOffset' // Ini akan menampilkan WIB
+            };
+            return date.toLocaleString('id-ID', options);
+        }
+
+        // Fungsi untuk pergi ke halaman konfirmasi pembayaran dan mengirim data ke backend
+        async function goToKonfirmasiPembayaran() {
+            if (!selectedPaymentMethod) {
+                alert("Mohon pilih metode pembayaran terlebih dahulu.");
+                return;
+            }
+
+            // 1. Ambil data dari formulir donatur
+            const namaDonaturInput = document.getElementById('namaDonatur').value;
+            const kontak = document.getElementById('kontakDonatur').value;
+            const anonim = document.getElementById('anonimCheckbox').checked;
+            const pesan = document.getElementById('pesanDukungan').value;
+            const jumlah = selectedDonationAmount;
+
+            // Validasi sederhana
+            if (!namaDonaturInput && !anonim) {
+                alert("Mohon masukkan Nama Lengkap atau pilih Donasi sebagai anonim.");
+                return;
+            }
+            if (!kontak) {
+                alert("Mohon masukkan Nomor Ponsel atau Email Anda.");
+                return;
+            }
+
+            // Nama yang akan dikirim ke backend (sesuai donasiController.js)
+            const namaUntukBackend = anonim ? "Anonim" : namaDonaturInput;
+
+            // Data yang akan dikirim ke backend
+            const dataDonasi = {
+                nama: namaUntukBackend,
+                jumlah: jumlah,
+                pesan: pesan
+            };
+
+            console.log("Mengirim donasi ke backend:", dataDonasi);
+
+            try {
+                // KIRIM DATA KE BACKEND
+                const response = await fetch("http://localhost:3000/api/donasi", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dataDonasi)
+                });
+
+                const resultText = await response.text(); 
+
+                if (!response.ok) {
+                    throw new Error(`Gagal mengirim donasi: ${resultText || response.statusText}`);
+                }
+                
+                alert("Donasi berhasil! Terima kasih ❤️");
+                console.log("Respon dari backend:", resultText);
+
+                // Setelah berhasil kirim data, baru tampilkan halaman konfirmasi
+                document.getElementById("paymentContainer").style.display = "none";
+                document.getElementById("konfirmasiDonasiSection").style.display = "block";
+
+                // Isi detail di halaman konfirmasi
+                const waktuSekarang = new Date();
+                // Batas waktu: 10 menit untuk QRIS, 24 jam untuk lainnya (sesuaikan dengan logic di closeModal/selectBank jika perlu)
+                const waktuBatasPembayaran = new Date(waktuSekarang.getTime() + (selectedPaymentMethod.type === 'QRIS' ? 10 * 60 * 1000 : 24 * 60 * 60 * 1000));
+                document.getElementById('batasWaktuPembayaran').textContent = formatDateTime(waktuBatasPembayaran);
+
+                document.getElementById('namaMetodePembayaranKonfirmasi').textContent = selectedPaymentMethod.name;
+                document.getElementById('jumlahTotalDonasiKonfirmasi').textContent = `Rp ${selectedDonationAmount.toLocaleString('id-ID')}`;
+
+                const logoMetodePembayaranKonfirmasi = document.getElementById('logoMetodePembayaranKonfirmasi');
+                if (selectedPaymentMethod.logo) {
+                    logoMetodePembayaranKonfirmasi.src = `assets/${selectedPaymentMethod.logo}`;
+                    logoMetodePembayaranKonfirmasi.alt = `Logo ${selectedPaymentMethod.name}`;
+                    logoMetodePembayaranKonfirmasi.style.display = 'inline';
+                } else {
+                    logoMetodePembayaranKonfirmasi.style.display = 'none';
+                }
+
+                const nomorVirtualAccountKonfirmasi = document.getElementById('nomorVirtualAccountKonfirmasi');
+                const copyButton = document.querySelector('.nomor-va-group-konfirmasi button');
+
+                if (selectedPaymentMethod.type === 'QRIS') {
+                    nomorVirtualAccountKonfirmasi.innerHTML = `<img src="assets/${selectedPaymentMethod.details}" alt="QRIS Code" style="max-width: 150px; height: auto; display: block; margin: auto;">`;
+                    nomorVirtualAccountKonfirmasi.style.textAlign = 'center';
+                    copyButton.style.display = 'none';
+                } else {
+                    nomorVirtualAccountKonfirmasi.textContent = selectedPaymentMethod.details;
+                    nomorVirtualAccountKonfirmasi.style.textAlign = 'left';
+                    copyButton.style.display = 'inline-block';
+                }
+
+            } catch (error) {
+                alert("Gagal mengirim donasi. Pastikan backend aktif, URL benar, dan merespons dengan benar. Error: " + error.message);
+                console.error("Kesalahan saat mengirim donasi:", error);
+            }
+        }
+
+        // Fungsi untuk menyalin nomor VA
+        function salinNomorVA() {
+            const nomorVAElement = document.getElementById('nomorVirtualAccountKonfirmasi');
+            if (nomorVAElement.querySelector('img')) {
+                alert('Tidak ada nomor yang bisa disalin untuk QRIS. Silakan scan gambar.');
+                return;
+            }
+            const nomorVA = nomorVAElement.textContent;
+            navigator.clipboard.writeText(nomorVA)
+                .then(() => {
+                    alert('Nomor Virtual Account berhasil disalin: ' + nomorVA);
+                })
+                .catch(err => {
+                    console.error('Gagal menyalin nomor VA: ', err);
+                    alert('Gagal menyalin nomor Virtual Account. Silakan salin manual.');
+                });
+        }
+
+        // Fungsi untuk kembali ke halaman donasi awal
+        function kembaliKeHalamanDonasiAwal() {
+            document.getElementById("konfirmasiDonasiSection").style.display = "none";
+            document.getElementById("introSection").style.display = "block";
+            
+            // Reset semua form dan variabel
+            document.getElementById('customAmount').value = '';
+            document.getElementById('continueBtn').disabled = true;
+            document.getElementById('continueBtn').style.backgroundColor = '#888';
+            document.getElementById('continueBtn').style.cursor = 'not-allowed';
+            selectedDonationAmount = 0;
+            selectedPaymentMethod = null;
+            document.getElementById('displayAmount').value = 'Rp 0';
+            document.getElementById('totalDonationDisplay').innerText = 'Rp 0';
+            
+            document.getElementById('namaDonatur').value = '';
+            document.getElementById('kontakDonatur').value = '';
+            document.getElementById('anonimCheckbox').checked = true;
+            document.getElementById('pesanDukungan').value = '';
+
+            document.getElementById("paymentDetails").innerHTML = ''; // Clear payment details section
+            document.getElementById("paymentDetails").style.display = "none"; // Hide payment details section
+            document.getElementById("selectedBank").textContent = 'Pilih Metode Pembayaran'; // Reset text
+        }
+    </script>
+
+</body>
+</html>

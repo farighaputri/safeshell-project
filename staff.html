@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safe Shell - Tim Staff</title>
+  <style>
+    /* Reset CSS dasar */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #1c3b2c;
+      color: white;
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      padding: 20px 40px; /* Padding konsisten dengan konten */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1c3b2c;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      width: 50px;
+      height: 50px;
+      border-radius: 100%;
+    }
+
+    header nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #d4d4d4;
+    }
+
+    header .btn {
+      background-color: #cde596;
+      color: #000;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      text-align: center; /* Teks diatur rata tengah */
+      background-color: #1c3b2c;
+      color: white;
+      padding: 3rem 40px; /* Padding horizontal untuk memberi ruang dari tepi */
+      width: 100%; /* Memastikan section mengambil lebar penuh */
+    }
+
+    .hero-section h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-section em {
+      display: block;
+      font-style: italic;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .hero-section p {
+      margin: 0 auto 1rem auto;
+      font-size: 1rem;
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    /* Hero Images */
+    .hero-images {
+      display: flex;
+      justify-content: center; /* Tetap di tengah */
+      gap: 1.5rem; /* Jarak antar gambar */
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      max-width: calc((300px * 3) + (1.5rem * 2)); /* Perhitungan untuk lebar gambar */
+      margin-left: auto; /* Untuk menengahkan container flexbox ini */
+      margin-right: auto; /* Untuk menengahkan container flexbox ini */
+    }
+
+    .hero-images img {
+      width: 300px; /* Lebar gambar diperbesar */
+      height: 200px; /* Tinggi disesuaikan agar proporsional */
+      border-radius: 15px;
+      object-fit: cover;
+      flex-grow: 1; /* Biarkan gambar sedikit membesar jika ada ruang sisa di Flexbox */
+    }
+
+    .commitment {
+      margin-top: 2.5rem;
+      text-align: center; /* Bagian komitmen diatur rata tengah */
+    }
+
+    .commitment h3 {
+      margin-bottom: 1rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .commitment-tags {
+      display: flex;
+      justify-content: center; /* Tag komitmen rata tengah */
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .commitment-tags span {
+      background-color: #d7f0cd;
+      color: #1c3b2c;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    /* Team Section - Disesuaikan agar gambar memenuhi lebar dan bawah */
+    .team-section {
+      text-align: center;
+      padding: 0; /* Menghapus semua padding internal */
+      background-color: #b9d6b3; /* Warna background untuk section */
+      color: #1c3b2c;
+      overflow: hidden; /* Penting untuk memastikan gambar tidak tumpah jika ada bayangan, dll. */
+    }
+
+    .team-section img {
+      display: block; /* Memastikan gambar berperilaku seperti block element */
+      margin: 0; /* Menghapus semua margin untuk menempel ke tepi */
+      width: 100%; /* Gambar akan mengisi lebar penuh kontainer induknya */
+      height: auto; /* Mempertahankan rasio aspek gambar */
+      max-width: none; /* Memastikan tidak ada batasan lebar maksimum */
+      vertical-align: bottom; /* Menghilangkan spasi ekstra di bawah gambar */
+    }
+
+    /* Footer */
+    footer {
+      background-color: #1c3b2c;
+      padding: 30px 40px; /* Padding konsisten dengan konten */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 16px;
+    }
+
+    .footer-text {
+      max-width: 400px;
+    }
+
+    .supported-by {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .supported-by img {
+      margin-top: 10px;
+      height: 50px;
+    }
+
+    /* Media Queries untuk Responsivitas */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px 20px; /* Kurangi padding di layar kecil */
+      }
+
+      header nav {
+        margin-top: 10px;
+      }
+
+      .hero-section {
+        padding: 3rem 20px; /* Sesuaikan padding untuk layar kecil */
+      }
+
+      .hero-images {
+        flex-direction: column; /* Gambar akan tumpuk di layar kecil */
+        align-items: center; /* Tetap pusatkan gambar yang menumpuk */
+        gap: 1rem; /* Jarak antar gambar saat menumpuk */
+        max-width: 100%; /* Biarkan mengambil lebar penuh dari container */
+        padding: 0 20px; /* Beri padding agar gambar tidak menempel tepi */
+      }
+
+      .hero-images img {
+        width: 100%; /* Gambar akan memenuhi lebar penuh container */
+        height: auto; /* Biarkan tinggi menyesuaikan proporsi */
+        max-width: 400px; /* Opsional: Batasi lebar maksimum gambar di layar kecil agar tidak terlalu besar */
+      }
+
+      .commitment-tags {
+        justify-content: center; /* Tag tetap di tengah di layar kecil */
+      }
+
+      /* Team Section di layar kecil */
+      .team-section {
+        padding: 0; /* Tetap nol untuk memastikan menempel */
+      }
+
+      .team-section img {
+        width: 100%; /* Pastikan gambar memenuhi lebar penuh */
+      }
+
+      footer {
+        padding: 30px 20px; /* Kurangi padding di layar kecil */
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+    }
+
+    /* Media query untuk layar yang sangat lebar jika gambar jadi terlalu besar */
+    @media (min-width: 1200px) {
+      .hero-section {
+        padding: 3rem 80px; /* Tingkatkan padding di layar yang sangat lebar */
+      }
+
+      .hero-images {
+        max-width: calc((320px * 3) + (2rem * 2)); /* Contoh: sesuaikan lebar gambar dan gap di layar sangat lebar */
+        gap: 2rem;
+      }
+      .hero-images img {
+        width: 320px; /* Sesuaikan lebar gambar */
+        height: 220px; /* Sesuaikan tinggi gambar */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="assets/safeshell bg putih bulet.png" alt="Logo Safe Shell" />
+      <div><strong>Safe Shell</strong><br />Pulau Derawan</div>
+    </div>
+    <nav>
+      <a href="home.html" class="active">Beranda</a>
+      <a href="volunteer.php" class="active">Volunteer</a>
+      <a href="donasi.html" class="active">Donasi</a>
+      <a href="staff.html" class="active">Staff</a>
+    </nav>
+  </header>
+
+  <section class="hero-section">
+    <h1>Satu Asa, Satu Tujuan</h1>
+    <em>Bersama membuat rumah nyaman untuk penyu</em>
+    <p>
+      Di Safe Shell, kami berkomitmen untuk menjadi rumah ternyaman bagi penyu—tempat yang aman untuk tumbuh dan berkembang.
+      Kami percaya bahwa menjaga kelestarian penyu berarti menjaga keseimbangan alam.
+    </p>
+    <p>
+      Melalui semangat kolaborasi, kami mengajak setiap orang untuk ikut berkontribusi.
+      Bersama, kita bisa menciptakan lingkungan yang lebih ramah, laut yang lebih bersih,
+      dan masa depan yang lebih baik bagi semua makhluk hidup.
+    </p>
+    <div class="hero-images">
+      <img src="assets/foto1.jpg" alt="Volunteer 1" />
+      <img src="assets/foto2.jpg" alt="Tukik" />
+      <img src="assets/foto3.jpg" alt="Penyu kecil" />
+    </div>
+    <div class="commitment">
+      <h3>Safe Shell berkomitmen untuk</h3>
+      <div class="commitment-tags">
+        <span>✓ Perlindungan Penyu</span>
+        <span>✓ Kolaborasi Untuk Alam</span>
+        <span>✓ Mewujudkan Dunia Lebih Baik</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <img src="assets/team safe shell.png" alt="Foto Tim Safe Shell" />
+  </section>
+
+  <footer>
+    <div class="footer-text">
+      <p>Safe Shell<br><b>Ruang Aman Untuk Penyu</b></p>
+      <p><strong>___________</strong></p><br>
+      <p>Kontak Kami <br>📧 <a href="mailto:safeshell@gmail.com">safeshell@gmail.com</a></p>
+    </div>
+    <div class="supported-by">
+      <p>Didukung oleh:</p>
+      <img src="assets/kopikala logo putih.png" alt="Logo Kopikala" />
+    </div>
+  </footer>
+
+</body>
+</html>

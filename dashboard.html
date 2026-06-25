@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard Admin Prokopkal</h1>
+
+        <h2>Data Donasi Terbaru</h2>
+        <table id="donasiTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Jumlah</th>
+                    <th>Pesan</th>
+                    <th>Tanggal</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+        <p id="loadingMessage" class="message">Memuat data donasi...</p>
+        <p id="errorMessage" class="message" style="color: red; display: none;"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchDonasiData();
+        });
+
+        async function fetchDonasiData() {
+            const loadingMessage = document.getElementById('loadingMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const donasiTableBody = document.querySelector('#donasiTable tbody');
+
+            loadingMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            donasiTableBody.innerHTML = ''; // Hapus data yang mungkin ada sebelumnya
+
+            try {
+                // URL ke endpoint backend Anda
+                // Pastikan port (3000) sesuai dengan port server.js Anda
+                const response = await fetch('http://localhost:3000/api/donasi');
+                
+                if (!response.ok) { // Jika respons bukan 2xx (misal 404, 500)
+                    throw new Error(`Gagal memuat data: ${response.status} ${response.statusText}`);
+                }
+
+                const donasiData = await response.json(); // Parsing respons JSON
+
+                if (donasiData.length === 0) {
+                    donasiTableBody.innerHTML = '<tr><td colspan="5">Belum ada data donasi yang tersedia.</td></tr>';
+                } else {
+                    donasiData.forEach(donasi => {
+                        const row = donasiTableBody.insertRow();
+                        row.insertCell().textContent = donasi.id;
+                        row.insertCell().textContent = donasi.nama;
+                        row.insertCell().textContent = donasi.jumlah;
+                        // Format tanggal agar lebih mudah dibaca
+                        row.insertCell().textContent = new Date(donasi.tanggal).toLocaleString();
+                        row.insertCell().textContent = donasi.pesan;
+                        
+                    });
+                }
+            } catch (error) {
+                console.error('Terjadi kesalahan saat mengambil data donasi:', error);
+                errorMessage.textContent = `Gagal memuat data donasi: ${error.message}. Pastikan backend berjalan di http://localhost:3000.`;
+                errorMessage.style.display = 'block';
+            } finally {
+                loadingMessage.style.display = 'none'; // Sembunyikan pesan loading setelah selesai
+            }
+        }
+    </script>
+</body>
+</html>
